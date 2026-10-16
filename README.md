@@ -22,3 +22,10 @@ The trade-off: this library does **not** do full parameter matching for media ty
 ## The awkward edge
 
 q-values are floats. The RFC defines them as at most three decimal places, but parsing `0.333` and `0.333333` into a float gives values that compare differently than you might expect. This library truncates extra fractional digits (rather than rounding) to match common server behaviour. If you compare q-factors directly in your own code, be aware that two ranges can both have `q == 1.0` and the tie is broken by the order of your offered values, not by the header order.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
